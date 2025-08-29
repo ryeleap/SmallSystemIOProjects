@@ -12,6 +12,13 @@ if (fs.existsSync(FILE)) {
     set = new Set();
 }
 
+function capitalizeFirstLetter(str) {
+    if (typeof str !== 'string' || str.length === 0) {
+        return str;
+    }
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 function mainMenu() {
     console.log("\nWelcome to the Grocery List App! What would you like to do today? Your options are:\n 1. Add item\n 2. Remove item\n 3. View list\n 4. Clear list\n 5. Exit");
 
@@ -21,8 +28,12 @@ function mainMenu() {
         switch (action) {
             case '1':
                 prompt.get(['Item'], function (err, result) {
-                    set.add(result.Item);
-                    console.log('You added ' + result.Item + ' to your grocery list.');
+                    if (!set.has(result.Item)) {
+                        set.add(result.Item);
+                        console.log('You added ' + capitalizeFirstLetter(result.Item) + ' to your grocery list.');
+                    } else {
+                        console.log('Item already exists in the list.');
+                    }
                     mainMenu();
                 });
                 break;
@@ -30,7 +41,7 @@ function mainMenu() {
             case '2':
                 prompt.get(['Item'], function (err, result) {
                     if (set.delete(result.Item)) {
-                        console.log('You removed ' + result.Item + ' from your grocery list.');
+                        console.log('You removed ' + capitalizeFirstLetter(result.Item) + ' from your grocery list.');
                     }
                     else {
                         console.log('Item not found in the list.');
@@ -43,7 +54,7 @@ function mainMenu() {
                 count = 0;
                 console.log("Your grocery list:\n");
                 for (const item of set.values()) {
-                    console.log((count + 1) + ". " + item);
+                    console.log((count + 1) + ". " + capitalizeFirstLetter(item));
                     count++;
                 }
                 mainMenu();
